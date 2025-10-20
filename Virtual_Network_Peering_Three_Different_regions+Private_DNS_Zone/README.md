@@ -1,4 +1,4 @@
-#  VirtualNetworkPeering(Threedi erentregions) + Private DNS Zone
+#  Virtual Network Peering(Three regions) + Private DNS Zone
 
 ### Here I am going to create three different network in different regions then configuring peering with DNS name resolution
 * So Only one VM will be accessible from outside the compagny 
