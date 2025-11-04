@@ -213,40 +213,11 @@ resource "azurerm_linux_virtual_machine" "ubuntu" {
   }
 
 
-  custom_data = base64encode(<<EOF
-#cloud-config
-package_update: true
-package_upgrade: true
-packages:
-  - apache2
-runcmd:
-  - systemctl enable apache2
-  - systemctl start apache2
-  - sleep 20
-  - |
-
-    while ! systemctl is-active --quiet apache2; do sleep 2; done
-
-    HOSTNAME=$(hostname)
-    PRIVATE_IP=$(hostname -I | awk '{print $1}')
-    
-    rm -f /var/www/html/index.html
-    cat > /var/www/html/index.html <<EOF_HTML
-<html>
-<head>
-    <title>Welcome to $HOSTNAME</title>
-</head>
-<body>
-    <h1>Hello, welcome to $HOSTNAME (IP: $PRIVATE_IP)</h1>
-    <p><em>Deployed via Terraform on $(date)</em></p>
-</body>
-</html>
-EOF_HTML
-
-    chown www-data:www-data /var/www/html/index.html
-    systemctl reload apache2
-EOF
-  )
+  custom_data = base64encode(templatefile("${path.module}/web-server-cloud-init.txt", {
+    vm_name = "apache2-${each.value.vnet_key}"
+    region  = each.value.vnet_key
+    subnet  = each.value.subnet_name
+  }))
 }
 
 #####

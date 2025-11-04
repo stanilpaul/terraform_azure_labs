@@ -1,0 +1,52 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+packages:
+  - apache2
+
+runcmd:
+  # Démarrer Apache
+  - systemctl enable apache2
+  - systemctl start apache2
+
+  # Désactiver firewall (Ubuntu = ufw, CentOS = firewalld → on couvre les deux)
+  - ufw disable 2>/dev/null || true
+  - systemctl stop firewalld 2>/dev/null || true
+
+  # Récupérer métadonnées Azure (optionnel)
+  - curl -H "Metadata:true" --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2020-09-01" -o /var/www/html/metadata.html 2>/dev/null || true
+
+  # Générer la page HTML avec date dynamique
+  - |
+    cat > /var/www/html/index.html <<EOF
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Welcome to Cloud with Paul</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 40px; background-color: #f1f4ffff; }
+          .header { color: #333; }
+          .info { color: #555; font-size: 1.2em; margin-top: 10px; }
+          .footer { margin-top: 30px; font-size: 0.9em; color: #888; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>Welcome to Cloud with Paul</h1>
+        </div>
+        <div class="info">
+          <strong>Host:</strong> ${vm_name} <br/>
+          <strong>Region:</strong> ${region} <br/>
+          <strong>Subnet:</strong> ${subnet}
+        </div>
+        <div class="footer">
+          <p><em>Deployed via Terraform • $(date)</em></p>
+        </div>
+      </body>
+    </html>
+    EOF
+
+  # Fix permissions
+  - chown www-data:www-data /var/www/html/index.html
+  - systemctl reload apache2
