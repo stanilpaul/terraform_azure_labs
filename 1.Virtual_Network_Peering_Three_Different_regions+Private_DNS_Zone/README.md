@@ -37,9 +37,7 @@ This Terraform code automatically creates:
 <div align="center">
   <img src="3peering.png" alt="Architecture Overview" width="800"/>
 </div>
-
 ---
-
 ## How to Deploy with Terraform
 
 ### Prerequisites
@@ -51,35 +49,35 @@ This Terraform code automatically creates:
   az login
 
 ### 1. Clone or download this repo
-git clone https://github.com/stanilpaul/terraform_azure_labs.git
-cd terraform_azure_labs
-cd 1.Virtual_Network_Peering_Three_Different_regions+Private_DNS_Zone
+`git clone https://github.com/stanilpaul/terraform_azure_labs.git`
+`cd terraform_azure_labs`
+`cd 1.Virtual_Network_Peering_Three_Different_regions+Private_DNS_Zone`
 
 ### 2. Initialize Terraform (downloads Azure provider)
-terraform init
+`terraform init`
 
 ### 3. Preview what will be created
-terraform plan
+`terraform plan`
 
 ### 4. Deploy everything!
-terraform apply
+`terraform apply`
 
 ### 5. Test
 - Take the windows public ip and RDP it
 - From windows, use dns name of other webserver name to visit
 
 ---
-# Just to remember you, we are communicating with internal services with different company from different Region through peering #
+**Just to remember you, we are communicating with internal services with different company from different Region through peering**
 
 ## Manuel steps:
 1. Create 3 RGs : 
-   - france RG in francecentral
-   - india RG in South india
-   - us RG in West us
+   - france RG in `francecentral`
+   - india RG in `South india`
+   - us RG in `West us`
 2. Create 3 VNETs in each region with subnets and NSG:
-   - for france : france-vnet -> public-subnet(10.0.0.0/24) & france-public NSG + private-subnet(10.0.1.0/24) & france-private NSG
-   - for india : india-vnet -> private-subnet(172.16.0.0/24) & india-private NSG
-   - for us: us-vnet -> private-subnet(192.168.0.0/24) & us-private NSG
+   - for france : france-vnet -> public-subnet(`10.0.0.0/24`) & france-public NSG + private-subnet(`10.0.1.0/24`) & france-private NSG
+   - for india : india-vnet -> private-subnet(`172.16.0.0/24`) & india-private NSG
+   - for us: us-vnet -> private-subnet(`192.168.0.0/24`) & us-private NSG
 3. Go to Network Security Group(NSG) : Edit `france-public`NSG -> 
    - Go to Inbound Security rules
    - Add
@@ -102,17 +100,17 @@ sudo systemctl enable apache2
 sudo systemctl start apache2
 ```
 
-7. Edit the page littel to differenciate the apache server
+7. Edit the page little to differenciate the apache server
 8. Virtual network:
    - select `france vnet`> peerings > ADD 
       -(Remote VNET Summary) Peering link name : `india-to-france`
-      - Virtual network: select India Vnet
-      - Select first two options: Allow india VNET to access FranceVnet + Allow IndiaVnet To receive forwarded traffic form FranceVnet
-      - (Local Vnet Summary) Peering link name: france-to-india
+      - Virtual network: select `India Vnet`
+      - Select first two options: `Allow india VNET to access FranceVne`t + `Allow IndiaVnet To receive forwarded traffic form FranceVnet`
+      - (Local Vnet Summary) Peering link name: `france-to-india`
       - and again select first two option
       - ADD
   - This will create a peering between france and india
-9. Do the same to peer france and us + india and us
+9. Do the same to peer `france and us` + `india and us`
 10. Go to Private DNS Zones
     - Create in france RG: `paul.lab` <- choose any domaine name you want
     - Add all our Vnet to the Vnet Link before the creation
@@ -122,12 +120,12 @@ sudo systemctl start apache2
       - Recordsets: 
       - Add : `windows-france` in Name + `10.0.0.4` in IP Address to add your windows machine to the domaine
       - Add other server with their private IP Address as windows server
-11. Take the RDP to the Windows machine with public ip
-12. Install the IIS on windwos server manually
+11. Take the `RDP` to the Windows machine with `public ip`
+12. Install the `IIS` on windwos server manually
 13. Test the Webservers with Edge `http://[DNS Record]/[DNS Zone name]`
 14. Delete all Three RGS.
 
 ---
 
-# Personaly manuel setup took me 1h20 minutes
-# TRY Terraform 😊
+**Personaly manual setup took me 1h20 minutes**
+****TRY Terraform 😊**
