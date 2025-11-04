@@ -42,3 +42,6 @@ variable "admin_password" {
   sensitive = true
   # default = "MyP@$$wod1sH€r€"
 }
+variable "domainename" {
+  type = string
+}

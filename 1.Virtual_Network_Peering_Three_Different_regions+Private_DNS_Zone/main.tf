@@ -345,7 +345,7 @@ resource "azurerm_virtual_machine_extension" "windows_iis" {
 #Private DNS Zone
 ########################
 resource "azurerm_private_dns_zone" "internal" {
-  name                = "paul.lab"
+  name                = var.domainename
   resource_group_name = azurerm_resource_group.this["france"].name # I create my private dns zone in France RG
 }
 resource "azurerm_private_dns_zone_virtual_network_link" "this" {
