@@ -35,7 +35,7 @@ This Terraform code automatically creates:
 ## Architecture Overview
 
 <div align="center">
-  <img src="3VnetPeering.svg" alt="Architecture Overview" width="800"/>
+  <img src="3peering.png" alt="Architecture Overview" width="800"/>
 </div>
 
 ---
